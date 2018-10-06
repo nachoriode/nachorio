@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "Baloncesto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    div.mapa_imagen {
+        position: relative
+    }
+
+    ul.notas li {
+        list-style: none;
+        position: absolute;
+        border: medium solid white;
+    }
+
+    
+
+    /*p:hover p.act {
+        display: block;
+    }
+
+    p.act {
+        margin: 10px 0 0 0;
+        padding: .3em;
+        display: none;
+        background: #FFF;
+        opacity: 0.65;
+        position: absolute;
+        top: 100%;
+    }*/
+
+    ul.notas li#nota1 {
+        width: 140px;
+        height: 110px;
+        top: 130px;
+        left: 345px;
+    }
+
+    ul.notas li#nota2 {
+        width: 30px;
+        height: 200px;
+        top: 10px;
+        left: 10px;
+    }
+
+    ul.notas li#nota3 {
+        width: 60px;
+        height: 60px;
+        top: 200px;
+        left: 150px;
+    }
+   
+</style>
+<div class="contenedor">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="mapa_imagen">
+                <img src="~/Imagenes/perfil.jpg" />
+
+                <ul class="notas">
+                    <li id="nota1" name="1">
+
+                    </li>
+                    <li id="nota2" name="2">
+
+                    </li>
+                    <li id="nota3" name="3">
+
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div>
+                <table>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script>
+        $("ul.notas li").mouseenter(
+        function(event)
+        {
+            var id = event.target.getAttribute("name");
+            $.ajax({
+                type: 'GET',
+                data: {//passing parameter
+                    'id': id
+                },
+                url: "@Url.Content("~/Home/DataEducation")",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json"
+            }).done(function (data) {
+                var table = $('table');
+                   
+                $.each(data, function (i, estudio) {
+                    if (i == 0) {
+                        table.append('<tr><td>' + estudio.estudios.Titulo + '</td></tr>');
+                    }
+                    table.append('<tr><td>' + estudio.Tipo + '</td><td>' + estudio.Nivel + '</td></tr>');
+                   
+                   });
+               
+                
+
+            }).fail(function (xhr, status, error) {
+                alert(xhr.responseText);
+                alert(status);
+                alert(error);
+            });
+            
+        }
+
+        )
+        $("ul.notas li").mouseleave(function () {
+            // Obtenemos el total de columnas (tr) del id "tabla"
+            var trs = $("table tr").length;
+            if (trs > 0) {
+                // Eliminamos la ultima columna
+                $("table tr").remove();
+            }
+        });
+  
+      </script>
+}
